@@ -8,11 +8,28 @@
 
 A lightweight, dynamic registry for AI agent prompt definitions in Laravel. Register prompt metadata — agent class, name, description, fallback Blade view, and tier — either via configuration or programmatically in a service provider, then look them up at runtime from anywhere in your application.
 
+## TL;DR
+
+```php
+use IllumaLaw\PromptRegistry\Facades\PromptRegistry;
+
+// Register a prompt definition
+PromptRegistry::register('agents.legal_advisor', [
+    'agent' => \App\Ai\Agents\LegalAdvisor::class,
+    'name' => 'Legal Advisor',
+    'description' => 'Provides initial legal guidance.',
+    'fallback_view' => 'prompts.legal_advisor',
+]);
+
+// Retrieve it later
+$definition = PromptRegistry::forKey('agents.legal_advisor');
+```
+
 ## Requirements
 
 | Dependency | Version |
 |---|---|
-| PHP | ^8.5 |
+| PHP | ^8.3 |
 | Laravel | 11, 12, or 13 |
 
 ## Installation
@@ -179,11 +196,11 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability, please send an e-mail to [ai@illuma.law](mailto:ai@illuma.law). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability, please send an e-mail to [support@illuma.law](mailto:support@illuma.law). All security vulnerabilities will be promptly addressed.
 
 ## Credits
 
-- [Illuma Law AI](https://github.com/illuma-law)
+- [illuma-law](https://github.com/illuma-law)
 - [All Contributors](https://github.com/illuma-law/laravel-prompt-registry/contributors)
 
 ## License

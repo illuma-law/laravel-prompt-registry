@@ -2,29 +2,27 @@ name: PHPStan
 
 on:
   push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main, dev]
+    paths:
+      - '**.php'
+      - 'phpstan.neon.dist'
+      - '.github/workflows/phpstan.yml'
 
 jobs:
   phpstan:
+    name: phpstan
     runs-on: ubuntu-latest
-
-    name: Static Analysis
-
+    timeout-minutes: 5
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.5"
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, fileinfo
+          php-version: '8.5'
           coverage: none
 
-      - name: Install dependencies
-        run: composer update --prefer-stable --prefer-dist --no-interaction
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v4
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse --no-progress
+        run: ./vendor/bin/phpstan --error-format=github
