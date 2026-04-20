@@ -21,4 +21,18 @@ return [
         //     'default_primary_tier' => 'standard',
         // ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Prompt Persistence
+    |--------------------------------------------------------------------------
+    |
+    | Configure an Eloquent model used to persist prompt overrides. When
+    | provided, the package will bind PromptContentStore to the generic
+    | EloquentPromptContentStore automatically.
+    |
+    */
+    'persistence' => [
+        'model' => null,
+    ],
 ];

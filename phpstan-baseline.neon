@@ -1,2 +1,109 @@
 parameters:
-    ignoreErrors: []
+	ignoreErrors:
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''AlphaAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''App\\\\Ai\\\\Agents\\\\One''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''App\\\\Ai\\\\Agents\\\\Two''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''App\\\\Ai\\\\Agents…''\.$#'
+			identifier: varTag.nativeType
+			count: 2
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''BetaAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''ConfigAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''ExtendedAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''FacadeAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''Non\\\\Existent\\\\Agent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''OriginalAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''ReplacedAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''SomeAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''StandardAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''UnknownAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''WeirdAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type class\-string is not subtype of native type ''XAgent''\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^Parameter \#1 \$definitions of method IllumaLaw\\PromptRegistry\\PromptRegistryManager\:\:registerMany\(\) expects array\<string, array\{agent\: class\-string, name\: string, description\: string, fallback_view\: string, default_primary_tier\?\: ''extended''\|''standard''\}\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php
+
+		-
+			message: '#^Parameter \#2 \$definition of method IllumaLaw\\PromptRegistry\\PromptRegistryManager\:\:register\(\) expects array\{agent\: class\-string, name\: string, description\: string, fallback_view\: string, default_primary_tier\?\: ''extended''\|''standard''\}, array\{agent\: class\-string, name\: ''Weird'', description\: '''', fallback_view\: '''', default_primary_tier\: ''premium''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/PromptRegistryManagerTest.php

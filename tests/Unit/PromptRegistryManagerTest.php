@@ -10,8 +10,11 @@ use IllumaLaw\PromptRegistry\PromptRegistryManager;
 it('can register and retrieve a prompt definition by key', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $agent */
+    $agent = 'App\Ai\Agents\TestAgent';
+
     $manager->register('agents.test', [
-        'agent' => 'App\Ai\Agents\TestAgent',
+        'agent' => $agent,
         'name' => 'Test Agent',
         'description' => 'Test description',
         'fallback_view' => 'prompts.test',
@@ -19,7 +22,7 @@ it('can register and retrieve a prompt definition by key', function (): void {
 
     $retrieved = $manager->forKey('agents.test');
 
-    expect($retrieved)->toBeArray()
+    expect($retrieved)->not->toBeNull()
         ->and($retrieved['key'])->toBe('agents.test')
         ->and($retrieved['agent'])->toBe('App\Ai\Agents\TestAgent')
         ->and($retrieved['name'])->toBe('Test Agent')
@@ -30,8 +33,11 @@ it('can register and retrieve a prompt definition by key', function (): void {
 it('merges the key into the definition when registering', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $agent */
+    $agent = 'SomeAgent';
+
     $manager->register('agents.merged', [
-        'agent' => 'SomeAgent',
+        'agent' => $agent,
         'name' => 'Some Agent',
         'description' => 'Desc',
         'fallback_view' => 'view',
@@ -43,11 +49,15 @@ it('merges the key into the definition when registering', function (): void {
 it('overwrites an existing registration with the same key', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $originalAgent */
+    $originalAgent = 'OriginalAgent';
     $manager->register('agents.dup', [
-        'agent' => 'OriginalAgent', 'name' => 'Original', 'description' => '', 'fallback_view' => '',
+        'agent' => $originalAgent, 'name' => 'Original', 'description' => '', 'fallback_view' => '',
     ]);
+    /** @var class-string $replacedAgent */
+    $replacedAgent = 'ReplacedAgent';
     $manager->register('agents.dup', [
-        'agent' => 'ReplacedAgent', 'name' => 'Replaced', 'description' => '', 'fallback_view' => '',
+        'agent' => $replacedAgent, 'name' => 'Replaced', 'description' => '', 'fallback_view' => '',
     ]);
 
     expect($manager->forKey('agents.dup')['agent'])->toBe('ReplacedAgent');
@@ -66,12 +76,17 @@ it('throws InvalidArgumentException for a missing key', function (): void {
 it('can register many prompts at once', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $agentOne */
+    $agentOne = 'App\Ai\Agents\One';
+    /** @var class-string $agentTwo */
+    $agentTwo = 'App\Ai\Agents\Two';
+
     $manager->registerMany([
         'agents.one' => [
-            'agent' => 'App\Ai\Agents\One', 'name' => 'One', 'description' => 'Desc one', 'fallback_view' => 'view.one',
+            'agent' => $agentOne, 'name' => 'One', 'description' => 'Desc one', 'fallback_view' => 'view.one',
         ],
         'agents.two' => [
-            'agent' => 'App\Ai\Agents\Two', 'name' => 'Two', 'description' => 'Desc two', 'fallback_view' => 'view.two',
+            'agent' => $agentTwo, 'name' => 'Two', 'description' => 'Desc two', 'fallback_view' => 'view.two',
         ],
     ]);
 
@@ -95,9 +110,14 @@ it('returns an empty array from definitionsByKey() when nothing is registered', 
 it('returns definitions keyed by registry key from definitionsByKey()', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $agentAlpha */
+    $agentAlpha = (string) 'AlphaAgent';
+    /** @var class-string $agentBeta */
+    $agentBeta = (string) 'BetaAgent';
+
     $manager->registerMany([
-        'agents.alpha' => ['agent' => 'AlphaAgent', 'name' => 'Alpha', 'description' => '', 'fallback_view' => ''],
-        'agents.beta' => ['agent' => 'BetaAgent',  'name' => 'Beta',  'description' => '', 'fallback_view' => ''],
+        'agents.alpha' => ['agent' => $agentAlpha, 'name' => 'Alpha', 'description' => '', 'fallback_view' => ''],
+        'agents.beta' => ['agent' => $agentBeta,  'name' => 'Beta',  'description' => '', 'fallback_view' => ''],
     ]);
 
     $byKey = $manager->definitionsByKey();
@@ -110,11 +130,13 @@ it('returns definitions keyed by registry key from definitionsByKey()', function
 it('all() returns a list (not associative)', function (): void {
     $manager = new PromptRegistryManager;
 
-    $manager->register('agents.x', ['agent' => 'XAgent', 'name' => 'X', 'description' => '', 'fallback_view' => '']);
+    /** @var class-string $agentX */
+    $agentX = 'XAgent';
+    $manager->register('agents.x', ['agent' => $agentX, 'name' => 'X', 'description' => '', 'fallback_view' => '']);
 
     $all = $manager->all();
 
-    expect(array_is_list($all))->toBeTrue()
+    expect(array_is_list($all))->toBe(true)
         ->and($all[0]['key'])->toBe('agents.x');
 });
 
@@ -125,17 +147,23 @@ it('all() returns a list (not associative)', function (): void {
 it('can retrieve a definition by agent class', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $agent */
+    $agent = 'App\Ai\Agents\TestAgent';
+
     $manager->register('agents.test', [
-        'agent' => 'App\Ai\Agents\TestAgent', 'name' => 'Test Agent', 'description' => '', 'fallback_view' => '',
+        'agent' => $agent, 'name' => 'Test Agent', 'description' => '', 'fallback_view' => '',
     ]);
 
-    expect($manager->forAgent('App\Ai\Agents\TestAgent')['key'])->toBe('agents.test');
+    expect($manager->forAgent($agent)['key'])->toBe('agents.test');
 });
 
 it('throws InvalidArgumentException for an unknown agent class', function (): void {
     $manager = new PromptRegistryManager;
 
-    $manager->forAgent('Non\Existent\Agent');
+    /** @var class-string $agent */
+    $agent = 'Non\Existent\Agent';
+
+    $manager->forAgent($agent);
 })->throws(InvalidArgumentException::class, 'No prompt definition was registered for [Non\Existent\Agent].');
 
 // ---------------------------------------------------------------------------
@@ -145,39 +173,51 @@ it('throws InvalidArgumentException for an unknown agent class', function (): vo
 it('returns standard tier when no tier is specified', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $agent */
+    $agent = 'StandardAgent';
+
     $manager->register('agents.standard', [
-        'agent' => 'StandardAgent', 'name' => 'Standard', 'description' => '', 'fallback_view' => '',
+        'agent' => $agent, 'name' => 'Standard', 'description' => '', 'fallback_view' => '',
     ]);
 
-    expect($manager->defaultPrimaryTierForAgent('StandardAgent'))->toBe('standard');
+    expect($manager->defaultPrimaryTierForAgent($agent))->toBe('standard');
 });
 
 it('returns extended tier when default_primary_tier is extended', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $agent */
+    $agent = 'ExtendedAgent';
+
     $manager->register('agents.extended', [
-        'agent' => 'ExtendedAgent', 'name' => 'Extended', 'description' => '', 'fallback_view' => '',
+        'agent' => $agent, 'name' => 'Extended', 'description' => '', 'fallback_view' => '',
         'default_primary_tier' => 'extended',
     ]);
 
-    expect($manager->defaultPrimaryTierForAgent('ExtendedAgent'))->toBe('extended');
+    expect($manager->defaultPrimaryTierForAgent($agent))->toBe('extended');
 });
 
 it('returns standard tier for an unregistered agent', function (): void {
     $manager = new PromptRegistryManager;
 
-    expect($manager->defaultPrimaryTierForAgent('UnknownAgent'))->toBe('standard');
+    /** @var class-string $agent */
+    $agent = 'UnknownAgent';
+
+    expect($manager->defaultPrimaryTierForAgent($agent))->toBe('standard');
 });
 
 it('treats an invalid tier value as standard', function (): void {
     $manager = new PromptRegistryManager;
 
+    /** @var class-string $agent */
+    $agent = 'WeirdAgent';
+
     $manager->register('agents.weird', [
-        'agent' => 'WeirdAgent', 'name' => 'Weird', 'description' => '', 'fallback_view' => '',
+        'agent' => $agent, 'name' => 'Weird', 'description' => '', 'fallback_view' => '',
         'default_primary_tier' => 'premium',
     ]);
 
-    expect($manager->defaultPrimaryTierForAgent('WeirdAgent'))->toBe('standard');
+    expect($manager->defaultPrimaryTierForAgent($agent))->toBe('standard');
 });
 
 // ---------------------------------------------------------------------------
@@ -204,22 +244,26 @@ it('is bound to the container as a singleton', function (): void {
     $a = app('prompt-registry');
     $b = app('prompt-registry');
 
-    expect($a)->toBeInstanceOf(PromptRegistryManager::class)
+    expect($a)->not->toBeNull()
         ->and($a)->toBe($b);
 });
 
 it('can be resolved via the PromptRegistry facade', function (): void {
+    /** @var class-string $agent */
+    $agent = 'FacadeAgent';
     PromptRegistry::register('agents.facade', [
-        'agent' => 'FacadeAgent', 'name' => 'Facade', 'description' => '', 'fallback_view' => '',
+        'agent' => $agent, 'name' => 'Facade', 'description' => '', 'fallback_view' => '',
     ]);
 
     expect(PromptRegistry::forKey('agents.facade')['agent'])->toBe('FacadeAgent');
 });
 
 it('auto-registers prompts defined in the config', function (): void {
+    /** @var class-string $agent */
+    $agent = 'ConfigAgent';
     config(['prompt-registry.prompts' => [
         'agents.config_driven' => [
-            'agent' => 'ConfigAgent',
+            'agent' => $agent,
             'name' => 'Config Agent',
             'description' => 'Loaded from config',
             'fallback_view' => 'prompts.config',

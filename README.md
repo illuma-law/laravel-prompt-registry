@@ -6,31 +6,17 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/illuma-law/laravel-prompt-registry.svg?style=flat-square)](https://packagist.org/packages/illuma-law/laravel-prompt-registry)
 [![License](https://img.shields.io/packagist/l/illuma-law/laravel-prompt-registry.svg?style=flat-square)](https://packagist.org/packages/illuma-law/laravel-prompt-registry)
 
-A lightweight, dynamic registry for AI agent prompt definitions in Laravel. Register prompt metadata — agent class, name, description, fallback Blade view, and tier — either via configuration or programmatically in a service provider, then look them up at runtime from anywhere in your application.
+A lightweight, dynamic registry for AI agent prompt definitions in Laravel.
 
-## TL;DR
+This package provides a centralized system to register and look up AI prompt metadata across your Laravel application. Instead of hardcoding AI agent configurations, you can register an agent's associated class, name, description, fallback Blade views, and LLM tiers (Standard vs Extended) either via configuration or programmatically. 
 
-```php
-use IllumaLaw\PromptRegistry\Facades\PromptRegistry;
+## Features
 
-// Register a prompt definition
-PromptRegistry::register('agents.legal_advisor', [
-    'agent' => \App\Ai\Agents\LegalAdvisor::class,
-    'name' => 'Legal Advisor',
-    'description' => 'Provides initial legal guidance.',
-    'fallback_view' => 'prompts.legal_advisor',
-]);
-
-// Retrieve it later
-$definition = PromptRegistry::forKey('agents.legal_advisor');
-```
-
-## Requirements
-
-| Dependency | Version |
-|---|---|
-| PHP | ^8.3 |
-| Laravel | 11, 12, or 13 |
+- **Centralized Configuration:** Define all your application's AI prompts in a single config file.
+- **Dynamic Registration:** Register prompts on the fly from Service Providers or external packages.
+- **Bidirectional Lookup:** Fetch prompt definitions by their string key, or look up the configuration using the Agent's class name.
+- **Tier Routing:** Built-in support for defining whether an agent requires an 'extended' (smarter/larger) model tier or can operate on a 'standard' tier by default.
+- **Dependency Injection & Facade:** Use the `PromptRegistry` facade for quick access, or inject `PromptRegistryManager` for robust testing.
 
 ## Installation
 
@@ -40,106 +26,88 @@ Install the package via Composer:
 composer require illuma-law/laravel-prompt-registry
 ```
 
-The service provider and `PromptRegistry` facade alias are registered automatically via Laravel's package auto-discovery.
-
-### Publish the Config File
+Publish the config file:
 
 ```bash
 php artisan vendor:publish --tag="laravel-prompt-registry-config"
 ```
 
-This creates `config/prompt-registry.php` in your application.
-
 ## Configuration
 
-`config/prompt-registry.php` holds a `prompts` array where each key is a dot-notation registry key and each value describes the prompt definition:
+The published `config/prompt-registry.php` holds an array where each key is a dot-notation identifier for the prompt definition:
 
 ```php
 return [
     'prompts' => [
         'agents.content_creator' => [
-            'agent'               => \App\Ai\Agents\ContentCreatorAgent::class,
-            'name'                => 'Content Creator Agent',
-            'description'        => 'Generates marketing social content.',
-            'fallback_view'      => 'prompts.agents.content_creator',
-            'default_primary_tier' => 'standard', // 'standard' | 'extended' (optional)
+            'agent'                => \App\Ai\Agents\ContentCreatorAgent::class,
+            'name'                 => 'Content Creator Agent',
+            'description'          => 'Generates marketing social content.',
+            'fallback_view'        => 'prompts.agents.content_creator',
+            'default_primary_tier' => 'standard', // Optional: 'standard' | 'extended'
+        ],
+        'agents.legal_analyst' => [
+            'agent'                => \App\Ai\Agents\LegalAnalystAgent::class,
+            'name'                 => 'Legal Analyst',
+            'description'          => 'Analyzes complex legal documents.',
+            'fallback_view'        => 'prompts.agents.legal_analyst',
+            'default_primary_tier' => 'extended',
         ],
     ],
 ];
 ```
 
-All prompts defined here are automatically registered during the package boot phase.
+## Usage & Integration
 
-## Usage
+### Programmatic Registration
 
-### Registering Prompts Programmatically
-
-Register a single prompt anywhere (e.g. `AppServiceProvider::boot()`):
+While configuration is the easiest method, you can register prompts anywhere (like in a package's `ServiceProvider`):
 
 ```php
 use IllumaLaw\PromptRegistry\Facades\PromptRegistry;
 
+// Register a single prompt
 PromptRegistry::register('agents.custom', [
     'agent'         => \App\Ai\Agents\CustomAgent::class,
     'name'          => 'Custom Agent',
     'description'   => 'A custom agent for specialized tasks.',
     'fallback_view' => 'prompts.agents.custom',
 ]);
-```
 
-Register multiple prompts at once:
-
-```php
+// Register multiple prompts
 PromptRegistry::registerMany([
-    'agents.summariser' => [
-        'agent'         => \App\Ai\Agents\SummariserAgent::class,
-        'name'          => 'Summariser',
-        'description'   => 'Summarises legal documents.',
-        'fallback_view' => 'prompts.agents.summariser',
-    ],
-    'agents.classifier' => [
-        'agent'         => \App\Ai\Agents\ClassifierAgent::class,
-        'name'          => 'Classifier',
-        'description'   => 'Classifies legal texts by category.',
-        'fallback_view' => 'prompts.agents.classifier',
-        'default_primary_tier' => 'extended',
-    ],
+    // ...
 ]);
 ```
 
 ### Retrieving Prompts
 
+The package provides multiple ways to fetch the registered definitions:
+
 ```php
 use IllumaLaw\PromptRegistry\Facades\PromptRegistry;
+use App\Ai\Agents\ContentCreatorAgent;
 
-// All registered prompts as a flat list
+// Look up by registry key
+$definition = PromptRegistry::forKey('agents.content_creator');
+// Returns array: ['agent' => '...', 'name' => '...', 'description' => '...', ...]
+
+// Look up by Agent class name
+$definition = PromptRegistry::forAgent(ContentCreatorAgent::class);
+
+// Get the default primary tier directly for routing (returns 'standard' or 'extended')
+$tier = PromptRegistry::defaultPrimaryTierForAgent(ContentCreatorAgent::class);
+
+// Get all registered prompts (flat list)
 $all = PromptRegistry::all();
 
-// All registered prompts keyed by their registry key
+// Get all registered prompts, keyed by their registry key
 $byKey = PromptRegistry::definitionsByKey();
-
-// Look up a specific prompt by its registry key
-$definition = PromptRegistry::forKey('agents.content_creator');
-// $definition['key']          => 'agents.content_creator'
-// $definition['agent']        => \App\Ai\Agents\ContentCreatorAgent::class
-// $definition['name']         => 'Content Creator Agent'
-// $definition['description']  => 'Generates marketing social content.'
-// $definition['fallback_view']=> 'prompts.agents.content_creator'
-
-// Look up a prompt by agent class
-$definition = PromptRegistry::forAgent(\App\Ai\Agents\ContentCreatorAgent::class);
-
-// Get the default primary tier for an agent ('standard' or 'extended')
-$tier = PromptRegistry::defaultPrimaryTierForAgent(\App\Ai\Agents\ContentCreatorAgent::class);
-
-// Extract the short key from a registry key (strips the 'agents.' prefix)
-$shortKey = PromptRegistry::shortKeyFromRegistryKey('agents.content_creator');
-// => 'content_creator'
 ```
 
 ### Exception Handling
 
-`forKey()` and `forAgent()` both throw `\InvalidArgumentException` when no matching definition is found. `shortKeyFromRegistryKey()` throws `\InvalidArgumentException` when the key does not start with `agents.`.
+If you attempt to retrieve a prompt that hasn't been registered, the registry will throw an `\InvalidArgumentException`. This enforces strict configuration correctness.
 
 ```php
 use IllumaLaw\PromptRegistry\Facades\PromptRegistry;
@@ -147,20 +115,24 @@ use IllumaLaw\PromptRegistry\Facades\PromptRegistry;
 try {
     $definition = PromptRegistry::forKey('agents.unknown');
 } catch (\InvalidArgumentException $e) {
-    // No prompt definition was registered for key [agents.unknown].
+    // "No prompt definition was registered for key [agents.unknown]."
 }
 ```
 
-### Direct Manager Access
+### Dependency Injection
 
-You can resolve the underlying `PromptRegistryManager` from the container directly if you prefer dependency injection:
+You can resolve the underlying `PromptRegistryManager` from the Laravel container directly if you prefer dependency injection over Facades:
 
 ```php
+namespace App\Services;
+
 use IllumaLaw\PromptRegistry\PromptRegistryManager;
 
-class MyService
+class PromptService
 {
-    public function __construct(protected PromptRegistryManager $registry) {}
+    public function __construct(
+        protected PromptRegistryManager $registry
+    ) {}
 
     public function handle(): void
     {
@@ -169,39 +141,17 @@ class MyService
 }
 ```
 
-Or via the string binding:
-
-```php
-$manager = app('prompt-registry');
-```
-
 ## Testing
 
+The test suite uses Pest and maintains 100% code coverage.
+
 ```bash
-# Run the full test suite with coverage
+# Run tests
 composer test
 
 # Run static analysis
 composer analyse
-
-# Fix code style
-composer format
 ```
-
-The test suite uses [Pest](https://pestphp.com/) and requires 100% code coverage (`--min=100`).
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability, please send an e-mail to [support@illuma.law](mailto:support@illuma.law). All security vulnerabilities will be promptly addressed.
-
-## Credits
-
-- [illuma-law](https://github.com/illuma-law)
-- [All Contributors](https://github.com/illuma-law/laravel-prompt-registry/contributors)
 
 ## License
 
