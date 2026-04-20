@@ -1,0 +1,69 @@
+{
+    "name": "illuma-law/laravel-prompt-registry",
+    "description": "Dynamic AI agent prompt registration and retrieval for Laravel.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "ai", "prompt", "agent", "registry"],
+    "homepage": "https://github.com/illuma-law/laravel-prompt-registry",
+    "authors": [
+        {
+            "name": "Illuma Law AI",
+            "email": "ai@illuma.law"
+        }
+    ],
+    "require": {
+        "php": "^8.5",
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-arch": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "spatie/laravel-ray": "^1.35"
+    },
+    "autoload": {
+        "psr-4": {
+            "IllumaLaw\\PromptRegistry\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IllumaLaw\\PromptRegistry\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest --coverage",
+        "test:unit": "vendor/bin/pest --coverage --group=unit",
+        "analyse": "vendor/bin/phpstan analyse",
+        "format": "vendor/bin/pint"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "IllumaLaw\\PromptRegistry\\PromptRegistryServiceProvider"
+            ],
+            "aliases": {
+                "PromptRegistry": "IllumaLaw\\PromptRegistry\\Facades\\PromptRegistry"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
