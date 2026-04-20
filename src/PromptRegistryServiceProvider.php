@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IllumaLaw\PromptRegistry;
 
-use Illuminate\Database\Eloquent\Model;
 use IllumaLaw\PromptRegistry\Contracts\PromptContentStore;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

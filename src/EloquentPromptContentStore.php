@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace IllumaLaw\PromptRegistry;
 
-use Illuminate\Database\Eloquent\Model;
 use IllumaLaw\PromptRegistry\Contracts\PromptContentStore;
 use IllumaLaw\PromptRegistry\ValueObjects\StoredPromptContent;
+use Illuminate\Database\Eloquent\Model;
 
 final class EloquentPromptContentStore implements PromptContentStore
 {
