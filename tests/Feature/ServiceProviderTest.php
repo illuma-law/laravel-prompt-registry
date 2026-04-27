@@ -17,9 +17,9 @@ use Illuminate\Foundation\Application;
 it('auto-registers config-defined prompts on boot via the service provider', function (): void {
     config(['prompt-registry.prompts' => [
         'agents.sp_driven' => [
-            'agent'         => 'SPAgent',
-            'name'          => 'SP Agent',
-            'description'   => 'Loaded via SP boot',
+            'agent' => 'SPAgent',
+            'name' => 'SP Agent',
+            'description' => 'Loaded via SP boot',
             'fallback_view' => 'prompts.sp',
         ],
     ]]);

@@ -12,9 +12,9 @@ it('can register and retrieve a prompt definition by key', function (): void {
     $agent = 'App\Ai\Agents\TestAgent';
 
     $manager->register('agents.test', [
-        'agent'         => $agent,
-        'name'          => 'Test Agent',
-        'description'   => 'Test description',
+        'agent' => $agent,
+        'name' => 'Test Agent',
+        'description' => 'Test description',
         'fallback_view' => 'prompts.test',
     ]);
 
@@ -35,9 +35,9 @@ it('merges the key into the definition when registering', function (): void {
     $agent = 'SomeAgent';
 
     $manager->register('agents.merged', [
-        'agent'         => $agent,
-        'name'          => 'Some Agent',
-        'description'   => 'Desc',
+        'agent' => $agent,
+        'name' => 'Some Agent',
+        'description' => 'Desc',
         'fallback_view' => 'view',
     ]);
 
@@ -111,7 +111,7 @@ it('returns definitions keyed by registry key from definitionsByKey()', function
 
     $manager->registerMany([
         'agents.alpha' => ['agent' => $agentAlpha, 'name' => 'Alpha', 'description' => '', 'fallback_view' => ''],
-        'agents.beta'  => ['agent' => $agentBeta,  'name' => 'Beta',  'description' => '', 'fallback_view' => ''],
+        'agents.beta' => ['agent' => $agentBeta,  'name' => 'Beta',  'description' => '', 'fallback_view' => ''],
     ]);
 
     $byKey = $manager->definitionsByKey();
@@ -176,7 +176,7 @@ it('returns extended tier when default_primary_tier is extended', function (): v
     $agent = 'ExtendedAgent';
 
     $manager->register('agents.extended', [
-        'agent'                => $agent, 'name' => 'Extended', 'description' => '', 'fallback_view' => '',
+        'agent' => $agent, 'name' => 'Extended', 'description' => '', 'fallback_view' => '',
         'default_primary_tier' => 'extended',
     ]);
 
@@ -199,7 +199,7 @@ it('treats an invalid tier value as standard', function (): void {
     $agent = 'WeirdAgent';
 
     $manager->register('agents.weird', [
-        'agent'                => $agent, 'name' => 'Weird', 'description' => '', 'fallback_view' => '',
+        'agent' => $agent, 'name' => 'Weird', 'description' => '', 'fallback_view' => '',
         'default_primary_tier' => 'premium',
     ]);
 
@@ -241,9 +241,9 @@ it('auto-registers prompts defined in the config', function (): void {
     $agent = 'ConfigAgent';
     config(['prompt-registry.prompts' => [
         'agents.config_driven' => [
-            'agent'         => $agent,
-            'name'          => 'Config Agent',
-            'description'   => 'Loaded from config',
+            'agent' => $agent,
+            'name' => 'Config Agent',
+            'description' => 'Loaded from config',
             'fallback_view' => 'prompts.config',
         ],
     ]]);
