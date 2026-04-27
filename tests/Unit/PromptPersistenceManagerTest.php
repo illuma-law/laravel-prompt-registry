@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use IllumaLaw\PromptRegistry\Contracts\PromptContentStore;
 use IllumaLaw\PromptRegistry\PromptBodyResolver;
 use IllumaLaw\PromptRegistry\PromptPersistenceManager;
@@ -10,9 +12,9 @@ use IllumaLaw\PromptRegistry\ValueObjects\StoredPromptContent;
 it('persists trimmed content and reverts empty content to fallback state', function (): void {
     $registry = new PromptRegistryManager;
     $registry->register('agents.example', [
-        'agent' => 'ExampleAgent',
-        'name' => 'Example',
-        'description' => 'Example prompt',
+        'agent'         => 'ExampleAgent',
+        'name'          => 'Example',
+        'description'   => 'Example prompt',
         'fallback_view' => 'welcome',
     ]);
 

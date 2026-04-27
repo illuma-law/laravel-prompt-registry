@@ -1,11 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 use IllumaLaw\PromptRegistry\Facades\PromptRegistry;
 use IllumaLaw\PromptRegistry\PromptRegistryManager;
-
-// ---------------------------------------------------------------------------
-// register() / forKey()
-// ---------------------------------------------------------------------------
 
 it('can register and retrieve a prompt definition by key', function (): void {
     $manager = new PromptRegistryManager;
@@ -14,9 +12,9 @@ it('can register and retrieve a prompt definition by key', function (): void {
     $agent = 'App\Ai\Agents\TestAgent';
 
     $manager->register('agents.test', [
-        'agent' => $agent,
-        'name' => 'Test Agent',
-        'description' => 'Test description',
+        'agent'         => $agent,
+        'name'          => 'Test Agent',
+        'description'   => 'Test description',
         'fallback_view' => 'prompts.test',
     ]);
 
@@ -37,9 +35,9 @@ it('merges the key into the definition when registering', function (): void {
     $agent = 'SomeAgent';
 
     $manager->register('agents.merged', [
-        'agent' => $agent,
-        'name' => 'Some Agent',
-        'description' => 'Desc',
+        'agent'         => $agent,
+        'name'          => 'Some Agent',
+        'description'   => 'Desc',
         'fallback_view' => 'view',
     ]);
 
@@ -68,10 +66,6 @@ it('throws InvalidArgumentException for a missing key', function (): void {
 
     $manager->forKey('non.existent');
 })->throws(InvalidArgumentException::class, 'No prompt definition was registered for key [non.existent].');
-
-// ---------------------------------------------------------------------------
-// registerMany() / all() / definitionsByKey()
-// ---------------------------------------------------------------------------
 
 it('can register many prompts at once', function (): void {
     $manager = new PromptRegistryManager;
@@ -117,7 +111,7 @@ it('returns definitions keyed by registry key from definitionsByKey()', function
 
     $manager->registerMany([
         'agents.alpha' => ['agent' => $agentAlpha, 'name' => 'Alpha', 'description' => '', 'fallback_view' => ''],
-        'agents.beta' => ['agent' => $agentBeta,  'name' => 'Beta',  'description' => '', 'fallback_view' => ''],
+        'agents.beta'  => ['agent' => $agentBeta,  'name' => 'Beta',  'description' => '', 'fallback_view' => ''],
     ]);
 
     $byKey = $manager->definitionsByKey();
@@ -139,10 +133,6 @@ it('all() returns a list (not associative)', function (): void {
     expect(array_is_list($all))->toBe(true)
         ->and($all[0]['key'])->toBe('agents.x');
 });
-
-// ---------------------------------------------------------------------------
-// forAgent()
-// ---------------------------------------------------------------------------
 
 it('can retrieve a definition by agent class', function (): void {
     $manager = new PromptRegistryManager;
@@ -166,10 +156,6 @@ it('throws InvalidArgumentException for an unknown agent class', function (): vo
     $manager->forAgent($agent);
 })->throws(InvalidArgumentException::class, 'No prompt definition was registered for [Non\Existent\Agent].');
 
-// ---------------------------------------------------------------------------
-// defaultPrimaryTierForAgent()
-// ---------------------------------------------------------------------------
-
 it('returns standard tier when no tier is specified', function (): void {
     $manager = new PromptRegistryManager;
 
@@ -190,7 +176,7 @@ it('returns extended tier when default_primary_tier is extended', function (): v
     $agent = 'ExtendedAgent';
 
     $manager->register('agents.extended', [
-        'agent' => $agent, 'name' => 'Extended', 'description' => '', 'fallback_view' => '',
+        'agent'                => $agent, 'name' => 'Extended', 'description' => '', 'fallback_view' => '',
         'default_primary_tier' => 'extended',
     ]);
 
@@ -213,16 +199,12 @@ it('treats an invalid tier value as standard', function (): void {
     $agent = 'WeirdAgent';
 
     $manager->register('agents.weird', [
-        'agent' => $agent, 'name' => 'Weird', 'description' => '', 'fallback_view' => '',
+        'agent'                => $agent, 'name' => 'Weird', 'description' => '', 'fallback_view' => '',
         'default_primary_tier' => 'premium',
     ]);
 
     expect($manager->defaultPrimaryTierForAgent($agent))->toBe('standard');
 });
-
-// ---------------------------------------------------------------------------
-// shortKeyFromRegistryKey()
-// ---------------------------------------------------------------------------
 
 it('extracts the short key from a valid agents.* registry key', function (): void {
     $manager = new PromptRegistryManager;
@@ -235,10 +217,6 @@ it('throws InvalidArgumentException when the agents. prefix is missing', functio
 
     $manager->shortKeyFromRegistryKey('wrong.prefix');
 })->throws(InvalidArgumentException::class, 'Unexpected agent registry key [wrong.prefix].');
-
-// ---------------------------------------------------------------------------
-// Container / Facade integration
-// ---------------------------------------------------------------------------
 
 it('is bound to the container as a singleton', function (): void {
     $a = app('prompt-registry');
@@ -263,14 +241,13 @@ it('auto-registers prompts defined in the config', function (): void {
     $agent = 'ConfigAgent';
     config(['prompt-registry.prompts' => [
         'agents.config_driven' => [
-            'agent' => $agent,
-            'name' => 'Config Agent',
-            'description' => 'Loaded from config',
+            'agent'         => $agent,
+            'name'          => 'Config Agent',
+            'description'   => 'Loaded from config',
             'fallback_view' => 'prompts.config',
         ],
     ]]);
 
-    // Boot a fresh manager through the service provider bootstrap process.
     /** @var PromptRegistryManager $manager */
     $manager = new PromptRegistryManager;
     /** @var array<string, array{agent: class-string, name: string, description: string, fallback_view: string, default_primary_tier?: 'standard'|'extended'}> $prompts */

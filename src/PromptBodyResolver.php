@@ -57,13 +57,13 @@ final class PromptBodyResolver
         $hasDatabaseContent = $stored->hasBody();
 
         return [
-            'key' => $definition['key'],
-            'name' => $definition['name'],
-            'description' => $definition['description'],
-            'fallback_view' => $definition['fallback_view'],
-            'content' => $hasDatabaseContent ? $stored->content : $fallbackContent,
-            'source' => $hasDatabaseContent ? 'database' : 'fallback_view',
-            'persisted' => $stored->exists,
+            'key'                      => $definition['key'],
+            'name'                     => $definition['name'],
+            'description'              => $definition['description'],
+            'fallback_view'            => $definition['fallback_view'],
+            'content'                  => $hasDatabaseContent ? $stored->content : $fallbackContent,
+            'source'                   => $hasDatabaseContent ? 'database' : 'fallback_view',
+            'persisted'                => $stored->exists,
             'empty_persisted_override' => $stored->exists && ! $hasDatabaseContent,
         ];
     }

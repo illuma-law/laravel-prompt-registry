@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IllumaLaw\PromptRegistry\Tests;
 
 use IllumaLaw\PromptRegistry\PromptRegistryServiceProvider;

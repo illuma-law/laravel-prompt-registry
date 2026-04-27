@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use IllumaLaw\PromptRegistry\NullPromptContentStore;
 use IllumaLaw\PromptRegistry\ValueObjects\StoredPromptContent;
 

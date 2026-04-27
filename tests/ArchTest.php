@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 arch('source files use strict types')
     ->expect('IllumaLaw\PromptRegistry')
     ->toUseStrictTypes();

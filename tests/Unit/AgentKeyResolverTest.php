@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use IllumaLaw\PromptRegistry\AgentKeyResolver;
 use IllumaLaw\PromptRegistry\PromptRegistryManager;
 
@@ -10,9 +12,9 @@ it('resolves short keys from the registry when an agent is registered', function
     $agent = 'App\\Ai\\Agents\\ContentCreatorAgent';
 
     $manager->register('agents.content_creator', [
-        'agent' => $agent,
-        'name' => 'Content Creator',
-        'description' => 'Creates content',
+        'agent'         => $agent,
+        'name'          => 'Content Creator',
+        'description'   => 'Creates content',
         'fallback_view' => 'prompts.agents.content_creator',
     ]);
 
@@ -38,10 +40,10 @@ it('delegates default tier resolution to the registry manager', function (): voi
     $agent = 'App\\Ai\\Agents\\CaseReportCompilerAgent';
 
     $manager->register('agents.case_report_compiler', [
-        'agent' => $agent,
-        'name' => 'Case Report Compiler',
-        'description' => 'Compiles case reports',
-        'fallback_view' => 'prompts.agents.case_report_compiler',
+        'agent'                => $agent,
+        'name'                 => 'Case Report Compiler',
+        'description'          => 'Compiles case reports',
+        'fallback_view'        => 'prompts.agents.case_report_compiler',
         'default_primary_tier' => 'extended',
     ]);
 
